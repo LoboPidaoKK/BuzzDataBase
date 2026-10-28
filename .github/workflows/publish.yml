@@ -1,0 +1,38 @@
+name: Publicar BuzzDataBase
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar repositório
+        uses: actions/checkout@v4
+
+      - name: Preparar site
+        run: |
+          rm -rf _site
+          mkdir _site
+          unzip -o BuzzDataBase_Site.zip -d _site
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Preparar artefato
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Publicar
+        id: deployment
+        uses: actions/deploy-pages@v4
